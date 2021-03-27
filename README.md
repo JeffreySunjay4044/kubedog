@@ -1,2 +1,2 @@
-# kubedog
-Trained dog that can be help around on k8s functionalities 
+# freshk8s
+Python client to manage k8s repo

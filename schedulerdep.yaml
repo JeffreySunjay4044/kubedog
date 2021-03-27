@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8sscheduler1
+  namespace: monitors
+  labels:
+    app: k8sscheduler
+spec:
+  selector:
+    matchLabels:
+      app: k8sscheduler
+  template:
+    metadata:
+      labels:
+        app: k8sscheduler
+    spec:
+      containers:
+      - name: k8sscheduler
+        image: k8sscheduler:1.0
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: kube-config-scheduler
+          mountPath: ~/.kube
+        - name: data
+          mountPath: /data
+      volumes:
+        - name: kube-config-scheduler
+          configMap:
+            name: kube-config-scheduler
+        - name: data # TODO: Add PVC volumes. Or just use grafana cloud agent?
+          emptyDir: {}
