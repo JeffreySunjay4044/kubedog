@@ -11,10 +11,16 @@ from k8sscheduler.backupdelete import BackupDelete
 from k8sscheduler.recreate import RecreateFiles
 from k8sreader.k8sreader import Readk8s
 from k8sscheduler.statuscheck import StatusCheck
+from coreservices.get_resources import get_all_namespaces
 
 # debugpy.listen(("localhost", 5678))
 app = Flask(__name__)
 
+
+@app.route('/get/namespaces', methods=['GET'])
+def get_namespaces():
+    ns_list = get_all_namespaces()
+    return app.response_class(response=json.dumps(ns_list), status=200, mimetype='application/json')
 
 
 @app.route('/scheduler/backupdelete', methods=['GET', 'POST'])
@@ -23,13 +29,15 @@ def backup_k8s_resources():
     backup_json = request.get_json(silent=True)
     print(backup_json)
     return BackupDelete.backup_and_delete(backup_json, False)
-    
+
+
 @app.route('/scheduler/recreate', methods=['GET', 'POST'])
 def recreate_k8s_resources():
     RecreateFiles.recreate_from_backup()
     RecreateFiles.clear_backedup_files()
 
-@app.route('/reader/logs', methods=['GET']) 
+
+@app.route('/reader/logs', methods=['GET'])
 def read_logs():
     config.load_kube_config()
     return Readk8s.read_log_file('orc-int')
