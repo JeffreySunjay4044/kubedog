@@ -1,7 +1,5 @@
 import logging
 from kubernetes import client
-from utils.scrubber import IngressGatewayCreator
-from k8sscheduler.statuscheck import StatusCheck
 from dataobject.k8smanifest import Pod
 import json
 logging.basicConfig(level=logging.INFO)

@@ -5,7 +5,7 @@ COPY . /app
 WORKDIR /app
 
 RUN pip3 install -r requirements.txt && \
-    chmod +x scheduler.py
+    chmod +x app/scheduler.py
 
-ENTRYPOINT [ "python3.7", "./scheduler.py" ]
+ENTRYPOINT [ "python3.7", "./app/scheduler.py" ]
 CMD []

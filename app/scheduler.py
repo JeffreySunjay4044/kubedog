@@ -10,7 +10,6 @@ from flask import json
 from k8sscheduler.backupdelete import BackupDelete
 from k8sscheduler.recreate import RecreateFiles
 from k8sreader.k8sreader import Readk8s
-from k8sscheduler.statuscheck import StatusCheck
 from coreservices.get_resources import get_all_namespaces
 
 # debugpy.listen(("localhost", 5678))
