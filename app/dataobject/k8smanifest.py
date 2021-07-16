@@ -3,14 +3,17 @@ class Deployment:
         deployment.name = name
         deployment.namespace = namespace
 
+
 class Service:
     def __init__(service, name, namespace, deployment):
         service.name = name
         service.namespace = namespace
         service.deployment = deployment
 
+
 class Ingress:
     pass
+
 
 class DepTree:
     def __init__(self, service, deploymenr, ingress):
@@ -18,17 +21,23 @@ class DepTree:
         self.deploymenr = Deployment
         self.ingress = Ingress
 
+
 class Namespace:
-  def __init__(self, name, data):
-    self.name = name
-    self.depTrees = data
+    def __init__(self, name, data):
+        self.name = name
+        self.depTrees = data
+
 
 class Pod:
-  def __init__(self, pod_data):
-    self.name = pod_data.metadata.name
-    self.status = pod_data.status.phase
-    self.pod_ip = pod_data.status.pod_ip
-    self.host_ip = pod_data.status.host_ip
-      
-    
+    def __init__(self, pod_data):
+        self.name = pod_data.metadata.name
+        self.status = pod_data.status.phase
+        self.pod_ip = pod_data.status.pod_ip
+        self.host_ip = pod_data.status.host_ip
 
+
+class KubernetesResourceObject:
+    def __init__(self, name, age, namespace=None):
+        self.name = name
+        self.age = age
+        self.namespace = namespace
