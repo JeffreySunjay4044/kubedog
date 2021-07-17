@@ -1,25 +1,65 @@
-# use case for beacking up and deleting for certain ns or certain dep
-import argparse
+"""
+The use case of the application is backing up and deleting certain namespace or deployment
+"""
 
-from kubernetes import client, config
+from coreservices.deployment_service import get_all_deployments, get_deployments_from
+from coreservices.namespace_service import get_all_namespaces, get_namespace_by_name
+from dataobject.k8smanifest import KubernetesResourceObject
 from flask import Flask, request
 from flask import json
-# from pdb import debugpy
-
-
 from k8sscheduler.backupdelete import BackupDelete
 from k8sscheduler.recreate import RecreateFiles
 from k8sreader.k8sreader import Readk8s
-from coreservices.get_resources import get_all_namespaces
+from kubernetes import client, config
 
-# debugpy.listen(("localhost", 5678))
 app = Flask(__name__)
 
 
 @app.route('/get/namespaces', methods=['GET'])
 def get_namespaces():
+    """
+    This API fetches the list of all namespaces in the cluster along with its age
+    :return HTTP Response with list of all-namespaces in the cluster:
+    """
     ns_list = get_all_namespaces()
     return app.response_class(response=json.dumps(ns_list), status=200, mimetype='application/json')
+
+
+@app.route('/get/deployments', methods=['GET'])
+def get_deployments_from_all_ns():
+    """
+    This API fetches list of deployments from all-namespaces in the cluster
+    :return HTTP Response with list of deployments from all namespaces:
+    """
+    dep_list = get_all_deployments()
+    return app.response_class(response=json.dumps(dep_list), status=200, mimetype='application/json')
+
+
+@app.route('/get/deployments/<namespace>', methods=['GET'])
+def get_deployments_from_ns(namespace):
+    """
+    This API fetches list of deployments from all-namespaces in the cluster
+    :param namespace: Name of the namespace
+    :return HTTP Response with list of deployments from given namespace:
+    """
+    dep_list = get_deployments_from(namespace)
+    return app.response_class(response=json.dumps(dep_list), status=200, mimetype='application/json')
+
+
+@app.route('/get/namespace/<name>', methods=['GET'])
+def get_namespace(name):
+    """
+    This API fetches the namespace with given name along with its age. If the namespace does not exist, response with
+    message: 'namespace not found' and status: '404' is returned
+    :param name: Name of the namespace
+    :return HTTP Response with details of given namespace:
+    """
+    ns_object = get_namespace_by_name(name)
+    if isinstance(ns_object, KubernetesResourceObject):
+        status_code = 200
+    else:
+        status_code = 404
+    return app.response_class(response=json.dumps(ns_object), status=status_code, mimetype='application/json')
 
 
 @app.route('/scheduler/backupdelete', methods=['GET', 'POST'])
@@ -45,26 +85,6 @@ def read_logs():
 if __name__ == '__main__':
     app.run(debug=True)
 
-
-# if __name__ == '__main__':
-#     parser = argparse.ArgumentParser(
-#         description=__doc__,
-#         formatter_class=argparse.RawDescriptionHelpFormatter
-#     )
-#     parser.add_argument('--namespace-with-deployment', required=False)
-#     parser.add_argument('--for-all-ns', required=False)
-#     parser.add_argument('--is-backup', required=False)
-#     parser.add_argument('--is-recreate', required=False)
-#     args = parser.parse_args()
-#     args.is_backup= True
-#     args.is_recreate= True
-#     args.namespace_with_deployment= {'orc': {'orc':''}}
-#     config.load_kube_config()
-#     if args.is_backup:
-#         BackupDelete.backup_and_delete(args.namespace_with_deployment, False)
-#     if args.is_recreate:
-#         RecreateFiles.recreate_from_backup()
-#         RecreateFiles.clear_backedup_files()
 
 def backup_delete(backup_json):
     config.load_kube_config()
