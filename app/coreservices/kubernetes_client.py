@@ -9,6 +9,7 @@ class KubernetesClient:
     core_v1_api_client = None
     api_client = None
     app_v1_api_client = None
+    extensions_v1_beta1_api_client = None
 
     def __init__(self):
         self.config_loader()
@@ -32,9 +33,16 @@ class KubernetesClient:
         return KubernetesClient.app_v1_api_client
 
     @staticmethod
+    def get_extensions_v1_beta1_api_client():
+        if KubernetesClient.extensions_v1_beta1_api_client is None:
+            KubernetesClient.extensions_v1_beta1_api_client = client.ExtensionsV1beta1Api()
+        return KubernetesClient.extensions_v1_beta1_api_client
+
+    @staticmethod
     def config_loader():
         """
-        This method loads configuration for the Kubernetes client that can make API calls directly to Kubernetes API Server
+        This method loads configuration for the Kubernetes client that can make API calls directly to Kubernetes API
+        Server
         :return:
         """
         if KubernetesClient.kube_config is None:
