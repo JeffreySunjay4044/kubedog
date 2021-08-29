@@ -1,0 +1,42 @@
+@hostname = http://localhost:5000
+@namespace = jenkins
+
+GET {{hostname}}/get/namespaces HTTP/1.1
+
+###
+
+GET {{hostname}}/get/namespace/{{namespace}} HTTP/1.1
+
+###
+
+GET {{hostname}}/get/ingress HTTP/1.1
+
+###
+
+GET {{hostname}}/get/ingress/{{namespace}} HTTP/1.1
+
+###
+
+GET {{hostname}}/get/services HTTP/1.1
+
+###
+
+GET {{hostname}}/get/services/{{namespace}} HTTP/1.1
+
+###
+
+GET {{hostname}}/get/deployments HTTP/1.1
+
+###
+
+GET {{hostname}}/get/deployments/{{namespace}} HTTP/1.1
+
+###
+
+GET {{hostname}}/get/daemon-sets HTTP/1.1
+
+###
+
+GET {{hostname}}/get/daemon-sets/{{namespace}} HTTP/1.1
+
+###
