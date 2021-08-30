@@ -1,5 +1,3 @@
-vault/
 venv/
-*/.idea/
-*/__pycache__/*
-.idea/
+**/__pycache__/
+.vscode/

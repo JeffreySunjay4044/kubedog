@@ -1,5 +1,5 @@
 from coreservices.kubernetes_client import kubernetes_api_client
-from coreservices.service_utils import get_age
+from utils.service_utils import get_age
 from dataobject.k8smanifest import KubernetesResourceObject
 from kubernetes.client.rest import ApiException
 import logging
@@ -14,7 +14,7 @@ def get_all_svc():
     svc_object_list = core_v1_api_client.list_service_for_all_namespaces()
     for svc in svc_object_list.items:
         svc_list.append(KubernetesResourceObject(name=svc.metadata.name, namespace=svc.metadata.namespace,
-                                                 age=get_age(svc.metadata.creation_timestamp)).__dict__)
+                                                 age=get_age(svc.metadata.creation_timestamp)))
     return svc_list
 
 
@@ -23,5 +23,5 @@ def get_all_svc_from(namespace):
     svc_object_list = core_v1_api_client.list_namespaced_service(namespace=namespace)
     for svc in svc_object_list.items:
         svc_list.append(KubernetesResourceObject(name=svc.metadata.name, namespace=svc.metadata.namespace,
-                                                 age=get_age(svc.metadata.creation_timestamp)).__dict__)
+                                                 age=get_age(svc.metadata.creation_timestamp)))
     return svc_list
